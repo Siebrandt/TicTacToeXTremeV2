@@ -26,11 +26,11 @@ public class TicTacToeXTreme {
         
         initialize(viewGame);
         
-        viewGame.show();
+        viewGame.setVisible(true);
     }
     
     private static void initialize(viewGame viewGame){
-        viewGame.setSize(new Dimension(500, 960));
+        viewGame.setSize(new Dimension(900, 900));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         viewGame.setLocation(dim.width/2-viewGame.getSize().width/2, dim.height/2-viewGame.getSize().height/2);
         
@@ -38,16 +38,8 @@ public class TicTacToeXTreme {
             viewGame.setIconImage(ImageIO.read(new File("Resources/TicTacToeXTreme.png")));
         }
         catch(IOException ex){
-            
+            System.out.println(ex);
         }
-        var contentpane = viewGame.getContentPane();
-        
-        /*JButton jb00 = new JButton();
-        jb00.setText(jb00.getName());
-        var gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        contentpane.add(jb00, gridBagConstraints);*/
     }
     
 }

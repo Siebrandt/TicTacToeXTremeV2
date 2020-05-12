@@ -6,6 +6,9 @@
 package View;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import javax.swing.*;
 
 /**
@@ -38,26 +41,31 @@ public class viewGame extends javax.swing.JFrame {
         jlbPlayfield = new javax.swing.JLabel();
         jedPlayfield = new javax.swing.JTextField();
         jBtnRefresh = new javax.swing.JButton();
+        jBtnShowScore = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(120, 0), new java.awt.Dimension(120, 0), new java.awt.Dimension(120, 32767));
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 50), new java.awt.Dimension(0, 50), new java.awt.Dimension(0, 50));
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(150, 0), new java.awt.Dimension(150, 0), new java.awt.Dimension(150, 32767));
+        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(150, 0), new java.awt.Dimension(150, 0), new java.awt.Dimension(150, 32767));
+        jlbOutput = new javax.swing.JLabel();
+        jpButtons = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TicTacToe XTreme");
-        setMaximumSize(new java.awt.Dimension(1024, 768));
-        setMinimumSize(new java.awt.Dimension(1024, 768));
+        setMaximumSize(new java.awt.Dimension(0, 1500));
+        setMinimumSize(new java.awt.Dimension(500, 960));
         setPreferredSize(new java.awt.Dimension(1024, 768));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jlbP1Symbol.setText("Spieler 1 Symbol :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         getContentPane().add(jlbP1Symbol, gridBagConstraints);
 
         jlbP2Symbol.setText("Spieler 2 Symbol :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         getContentPane().add(jlbP2Symbol, gridBagConstraints);
@@ -67,7 +75,7 @@ public class viewGame extends javax.swing.JFrame {
         jedP1Symbol.setMaximumSize(new java.awt.Dimension(13, 20));
         jedP1Symbol.setMinimumSize(new java.awt.Dimension(13, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 10);
@@ -78,7 +86,7 @@ public class viewGame extends javax.swing.JFrame {
         jedP2Symbol.setMaximumSize(new java.awt.Dimension(13, 20));
         jedP2Symbol.setMinimumSize(new java.awt.Dimension(13, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
@@ -90,24 +98,27 @@ public class viewGame extends javax.swing.JFrame {
         jlbPlayfield.setMinimumSize(new java.awt.Dimension(120, 14));
         jlbPlayfield.setPreferredSize(new java.awt.Dimension(120, 14));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         getContentPane().add(jlbPlayfield, gridBagConstraints);
 
         jedPlayfield.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jedPlayfield.setText("3");
+        jedPlayfield.setInputVerifier(new intVerifier());
         jedPlayfield.setMaximumSize(new java.awt.Dimension(40, 20));
         jedPlayfield.setMinimumSize(new java.awt.Dimension(40, 20));
         jedPlayfield.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         getContentPane().add(jedPlayfield, gridBagConstraints);
 
         jBtnRefresh.setText("Aktualisieren");
         jBtnRefresh.setToolTipText("");
+        jBtnRefresh.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBtnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnRefresh.setMaximumSize(new java.awt.Dimension(160, 20));
         jBtnRefresh.setMinimumSize(new java.awt.Dimension(160, 20));
         jBtnRefresh.setName(""); // NOI18N
@@ -118,63 +129,257 @@ public class viewGame extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         getContentPane().add(jBtnRefresh, gridBagConstraints);
+
+        jBtnShowScore.setText("Siehe Resultate");
+        jBtnShowScore.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBtnShowScore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnShowScoreActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        getContentPane().add(jBtnShowScore, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
         getContentPane().add(filler1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 5;
         getContentPane().add(filler3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 1;
+        getContentPane().add(filler2, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        getContentPane().add(filler4, gridBagConstraints);
+
+        jlbOutput.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jlbOutput.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlbOutput.setMaximumSize(new java.awt.Dimension(500, 40));
+        jlbOutput.setMinimumSize(new java.awt.Dimension(500, 40));
+        jlbOutput.setPreferredSize(new java.awt.Dimension(500, 40));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        getContentPane().add(jlbOutput, gridBagConstraints);
+
+        jpButtons.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jpButtons.setMaximumSize(new java.awt.Dimension(800, 800));
+        jpButtons.setMinimumSize(new java.awt.Dimension(800, 800));
+        jpButtons.setPreferredSize(new java.awt.Dimension(800, 800));
+        jpButtons.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(jpButtons, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnRefreshActionPerformed
-        if(btnPanel != null)
-            getContentPane().remove(btnPanel);
+        resetGame();
+    }//GEN-LAST:event_jBtnRefreshActionPerformed
+
+    private void jBtnShowScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowScoreActionPerformed
+        JFrame vs = new viewScore();
+        vs.setVisible(true);
+    }//GEN-LAST:event_jBtnShowScoreActionPerformed
+
+    private void jBtnPlayPerformed(java.awt.event.ActionEvent evt){
+        jedP1Symbol.setEnabled(false);
+        jedP2Symbol.setEnabled(false);
+        turns++;
         
+        JButton source = (JButton) evt.getSource();
+        source.setEnabled(false);
+        
+        jBtnRefresh.setText("Neu starten");
+        
+        int positionX = 0;
+        int positionY = 0;
+        int playfieldLength = 0;
+        try{
+            positionX = Integer.parseInt(source.getName().substring(4, 5));
+            positionY = Integer.parseInt(source.getName().substring(5, 6));
+            playfieldLength = Integer.parseInt(jedPlayfield.getText());
+        }
+        catch(NumberFormatException e)
+        {
+            System.out.println(e);
+            return;
+        }
+        
+        String playerSymbol = "";
+        if(turnForPlayer == 0){
+            turnForPlayer = 1;
+            playerSymbol = jedP1Symbol.getText();
+        }else if(turnForPlayer == 1){
+            turnForPlayer = 0;
+            playerSymbol = jedP2Symbol.getText();
+        }
+        source.setText(playerSymbol);
+        
+        boolean win = true;
+        JButton[] winningMove = new JButton[playfieldLength];
+        boolean draw = false;
+        for(int i = 0; i < playfieldLength && win; i++){
+            if(!jButtons[i][i].getText().equals(playerSymbol)){
+                win = false;
+            }else{
+                winningMove[i] = jButtons[i][i];
+            }
+        }
+        if(!win){
+            win = true;
+            for(int i = 0; i < playfieldLength && win; i++){
+                if(!jButtons[positionX][i].getText().equals(playerSymbol)){
+                    win = false;
+                }else{
+                    winningMove[i] = jButtons[positionX][i];
+                }
+            }
+            
+        }
+        if(!win){
+            win = true;
+            for(int i = 0; i < playfieldLength && win; i++){
+                if(!jButtons[i][positionY].getText().equals(playerSymbol)){
+                    win = false;
+                }else{
+                    winningMove[i] = jButtons[i][positionY];
+                }
+            }
+        }
+
+        if(!win){
+            draw = true;
+            for(JButton[] arrayButtons : jButtons){
+                for(JButton jBtn : arrayButtons){
+                    if(jBtn.getText() == "")
+                        draw = false;
+                }
+            }
+        }
+        
+        String output = "";
+        if(win){
+            output = "Spieler " + playerSymbol + " hat gewonnen!";    
+            for(JButton jb : winningMove){
+                jb.setBackground(Color.green);
+            }
+        }
+        
+        if(draw){
+            output = "Unentschieden!";
+        }
+        
+        if(draw || win){
+            try{
+                String winner = "Spieler ";
+                if(playerSymbol.equals(jedP1Symbol.getText()) && win)
+                    winner += "1";
+                else if(win)
+                    winner += "2";
+                else
+                    winner = "Unentschieden";
+                
+                FileWriter fileWriter = new FileWriter("C:\\Temp\\Score.txt", true);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                printWriter.println(winner +";"+turns+";"+playfieldLength+"X"+playfieldLength+";");
+                printWriter.close();
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
+        
+        if(win || draw){
+            for(JButton[] arrayButtons : jButtons){
+                for(JButton jBtn : arrayButtons){
+                    jBtn.setEnabled(false);
+                }
+            }
+        }
+        
+        jlbOutput.setText(output);
+    }
+    
+    private void resetGame(){
+        jpButtons.removeAll();
+        jpButtons.validate();
+        jpButtons.repaint();
+        
+        try{
+            jButtons = new JButton[Integer.parseInt(jedPlayfield.getText())][Integer.parseInt(jedPlayfield.getText())];
+        }
+        catch(NumberFormatException e)
+        {
+            System.out.println(e);
+            return;
+        }
         int length = Integer.parseInt(jedPlayfield.getText());
-        btnPanel = new JPanel();
+        if(length < 3 || length > 15){
+            jlbOutput.setText("Bitte eine Zahl von 3 bis 15 eingeben!");
+            return;
+        }
         GridBagLayout gbl = new GridBagLayout();
-        btnPanel.setLayout(gbl);
-        
         Dimension dimBtn = new Dimension(50,50);
         
         for(int i = 0; i < length; i++){
             for(int j = 0; j < length; j++){
                 JButton jBtn = new JButton();
                 jBtn.setName("jBtn" + i + j);
-                jBtn.setText(jBtn.getName());
+                jBtn.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jBtnPlayPerformed(evt);
+                    }
+                });
+                
+                jBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+                jBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jBtn.setFocusPainted(false);
                 
                 jBtn.setMinimumSize(dimBtn);
                 jBtn.setMaximumSize(dimBtn);
                 jBtn.setPreferredSize(dimBtn);
                 
+                jButtons[i][j] = jBtn;
+                
                 var gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.gridx = i;
-                gridBagConstraints.gridy = j;
-                btnPanel.add(jBtn, gridBagConstraints);
+                gridBagConstraints.gridy = j+1;
+                jpButtons.add(jBtn, gridBagConstraints);
             }
         }
-        var gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 5;
+        turnForPlayer = 0;
+        turns = 0;
         
-        btnPanel.revalidate();
+        jedP1Symbol.setEnabled(true);
+        jedP2Symbol.setEnabled(true);
         
-        getContentPane().add(btnPanel, gridBagConstraints);
-        getContentPane().revalidate();
-    }//GEN-LAST:event_jBtnRefreshActionPerformed
-
+        jlbOutput.setText("");
+        jBtnRefresh.setText("Aktualisieren");
+        
+        jpButtons.revalidate();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -209,17 +414,38 @@ public class viewGame extends javax.swing.JFrame {
             }
         });
     }
-    private JPanel btnPanel;
+    private JButton[][] jButtons;
+    
+    private int turnForPlayer = 0;
+    private int turns = 0;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
+    private javax.swing.Box.Filler filler4;
     private javax.swing.JButton jBtnRefresh;
+    private javax.swing.JButton jBtnShowScore;
     private javax.swing.JTextField jedP1Symbol;
     private javax.swing.JTextField jedP2Symbol;
     private javax.swing.JTextField jedPlayfield;
+    private javax.swing.JLabel jlbOutput;
     private javax.swing.JLabel jlbP1Symbol;
     private javax.swing.JLabel jlbP2Symbol;
     private javax.swing.JLabel jlbPlayfield;
+    private javax.swing.JPanel jpButtons;
     // End of variables declaration//GEN-END:variables
+
+    private static class intVerifier extends InputVerifier {
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;
+            try{
+                return Integer.parseInt(tf.getText()) >= 3 && Integer.parseInt(tf.getText()) <= 15;
+            }catch(Exception e){
+                System.out.println(e);
+            }
+            return false;
+        }
+    }
 }
